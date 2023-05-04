@@ -97,25 +97,51 @@ Now let's look at an example of a smart contract that uses Ethlint to identify p
 
 ```solidity
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
-contract UserBalances {
-    mapping(address => uint256) private balances;
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+contract UserBalances is ReentrancyGuard {
+
+    mapping(address => uint128) private balances;
+
+    uint128 private constant MAX_DEPOSIT = 100;
+
     
-    function deposit() public payable {
-        balances[tx.origin] += msg.value;
+
+    function deposit() external payable nonReentrant {
+
+        require(msg.value <= MAX_DEPOSIT, "Deposit amount exceeds maximum limit");
+
+        balances[msg.sender] += uint128(msg.value);
+
     }
+
     
-    function withdraw(uint256 amount) public {
-        require(balances[tx.origin] >= amount, "Insufficient balance");
-        balances[tx.origin] -= amount;
-        tx.origin.send(amount);
+
+    function withdraw(uint128 amount) external nonReentrant {
+
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+
+        balances[msg.sender] -= amount;
+
+        (bool success, ) = msg.sender.call{value: uint256(amount)}("");
+
+        require(success, "Transfer failed.");
+
     }
+
     
-    function getBalance(address user) public view returns (uint256) {
-        return balances[user];
+
+    function getBalance(address user) external pure returns (uint128) {
+
+        return uint128(balances[user]);
+
     }
+
 }
+
 
 ```
 Let's go through the code line by line;
@@ -125,14 +151,18 @@ Let's go through the code line by line;
 `contract UserBalances`: starts the contract declaration for a contract called UserBalances.
 
 ```bash
-    mapping(address => uint256) private balances
+    mapping(address => uint128) private balances
 ```
 - Declares a mapping named `balances` that maps addresses to unsigned integers, where the addresses represent users and the integers represent the balances of those users.
 - The `private` keyword makes the mapping accessible only within the contract and not from outside.
 
 ```bash
-    function deposit() public payable {
-        balances[tx.origin] += msg.value;
+    function deposit() external payable nonReentrant {
+
+        require(msg.value <= MAX_DEPOSIT, "Deposit amount exceeds maximum limit");
+
+        balances[msg.sender] += uint128(msg.value);
+
     }
 ```
 
@@ -140,10 +170,16 @@ Let's go through the code line by line;
 - Adds the value sent with the function call (`msg.value)` to the balance of the user calling the function (`tx.origin`).
 
 ```bash
-    function withdraw(uint256 amount) public {
-        require(balances[tx.origin] >= amount, "Insufficient balance");
-        balances[tx.origin] -= amount;
-        tx.origin.send(amount);
+    function withdraw(uint128 amount) external nonReentrant {
+
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+
+        balances[msg.sender] -= amount;
+
+        (bool success, ) = msg.sender.call{value: uint256(amount)}("");
+
+        require(success, "Transfer failed.");
+
     }
 ```
 - Defines a function called `withdraw` that is marked as `public`.
@@ -184,8 +220,8 @@ Here is an example of the output from Ethlint:
 
 Ethlint has identified several potential security issues in our contract. The first warning is about the use of tx.origin, which we can fix by using msg.sender instead. The second warning is about uninitialized storage, which we can fix by initializing the balances mapping. The third warning is about unchecked arithmetic operations, which we have already fixed by using SafeMath. The fourth warning is about the use of the transfer function, which we can fix by using the withdraw pattern instead.
 
-```javascript
-// SPDX-License-Identifier: MIT
+```solidity
+ // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -203,6 +239,7 @@ contract UserBalances {
     event Withdraw(address indexed user, uint256 amount);
     
     function deposit() public payable {
+        require(msg.value > 0, "Invalid deposit amount");
         balances[msg.sender] = balances[msg.sender].add(msg.value);
         emit Deposit(msg.sender, msg.value);
     }
@@ -218,6 +255,7 @@ contract UserBalances {
         return balances[user];
     }
 }
+
 ```
 
 You have fixed the potential security issues identified by Ethlint:
