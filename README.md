@@ -97,25 +97,51 @@ Now let's look at an example of a smart contract that uses Ethlint to identify p
 
 ```solidity
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
-contract UserBalances {
-    mapping(address => uint256) private balances;
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+contract UserBalances is ReentrancyGuard {
+
+    mapping(address => uint128) private balances;
+
+    uint128 private constant MAX_DEPOSIT = 100 ether;
+
     
-    function deposit() public payable {
-        balances[tx.origin] += msg.value;
+
+    function deposit() external payable nonReentrant {
+
+        require(msg.value <= MAX_DEPOSIT, "Deposit amount exceeds maximum limit");
+
+        balances[msg.sender] += uint128(msg.value);
+
     }
+
     
-    function withdraw(uint256 amount) public {
-        require(balances[tx.origin] >= amount, "Insufficient balance");
-        balances[tx.origin] -= amount;
-        tx.origin.send(amount);
+
+    function withdraw(uint128 amount) external nonReentrant {
+
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+
+        balances[msg.sender] -= amount;
+
+        (bool success, ) = msg.sender.call{value: uint256(amount)}("");
+
+        require(success, "Transfer failed.");
+
     }
+
     
-    function getBalance(address user) public view returns (uint256) {
-        return balances[user];
+
+    function getBalance(address user) external pure returns (uint128) {
+
+        return uint128(balances[user]);
+
     }
+
 }
+
 
 ```
 Let's go through the code line by line;
@@ -125,14 +151,18 @@ Let's go through the code line by line;
 `contract UserBalances`: starts the contract declaration for a contract called UserBalances.
 
 ```bash
-    mapping(address => uint256) private balances
+    mapping(address => uint128) private balances
 ```
 - Declares a mapping named `balances` that maps addresses to unsigned integers, where the addresses represent users and the integers represent the balances of those users.
 - The `private` keyword makes the mapping accessible only within the contract and not from outside.
 
 ```bash
-    function deposit() public payable {
-        balances[tx.origin] += msg.value;
+    function deposit() external payable nonReentrant {
+
+        require(msg.value <= MAX_DEPOSIT, "Deposit amount exceeds maximum limit");
+
+        balances[msg.sender] += uint128(msg.value);
+
     }
 ```
 
@@ -140,10 +170,16 @@ Let's go through the code line by line;
 - Adds the value sent with the function call (`msg.value)` to the balance of the user calling the function (`tx.origin`).
 
 ```bash
-    function withdraw(uint256 amount) public {
-        require(balances[tx.origin] >= amount, "Insufficient balance");
-        balances[tx.origin] -= amount;
-        tx.origin.send(amount);
+    function withdraw(uint128 amount) external nonReentrant {
+
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+
+        balances[msg.sender] -= amount;
+
+        (bool success, ) = msg.sender.call{value: uint256(amount)}("");
+
+        require(success, "Transfer failed.");
+
     }
 ```
 - Defines a function called `withdraw` that is marked as `public`.
