@@ -1,43 +1,50 @@
-# How to Secure Your Celo Smart Contracts with Ethlint
+# How to Secure Your Celo Smart Contracts using Ethlint:
 
-## Table of Contents
-- [How to Secure Your Celo Smart Contracts with Ethlint](#how-to-secure-your-celo-smart-contracts-with-ethlint)
+## Table of Contents:
+- [How to Secure Your Celo Smart Contracts using Ethlint](#how-to-secure-your-celo-smart-contracts-using-ethlint)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
-  - [Prerequisites](#prerequisites)
+  - [Requirements](#requirements)
   - [Understanding Ethlint and its Importance in Smart Contract Security](#understanding-ethlint-and-its-importance-in-smart-contract-security)
   - [What is Celo?](#what-is-celo)
   - [Installing and Configuring Ethlint](#installing-and-configuring-ethlint)
   - [Integrating Ethlint with Hardhat](#integrating-ethlint-with-hardhat)
-  - [Writing Secure Smart Contracts with Ethlint](#writing-secure-smart-contracts-with-ethlint)
+  - [Writing a Secure Smart Contracts with Ethlint](#writing-a-secure-smart-contracts-with-ethlint)
   - [Writing Tests for the Contract](#writing-tests-for-the-contract)
   - [Deploying on the Celo network](#deploying-on-the-celo-network)
   - [Conclusion](#conclusion)
 
-## Introduction
-Smart contracts have become an integral part of the blockchain ecosystem, and they have numerous use cases ranging from decentralized finance to supply chain management. However, the security of these smart contracts is a critical concern, and vulnerabilities in smart contracts can result in significant losses. Ethlint is a tool that can help developers identify potential security issues in their smart contracts and ensure that they are writing secure code.
+## Introduction:
 
-This tutorial will provide a comprehensive guide on how to secure your Celo smart contracts using Ethlint. We will begin by discussing the prerequisites for using Ethlint, and then we will explore Ethlint and its importance in smart contract security. We will then move on to installing and configuring Ethlint, integrating it with Hardhat, and writing secure smart contracts with Ethlint, and deploying on Celo.
+Smart Contracts have become an integral part of the blockchain ecosystem and they are numerous use cases ranging from decentralized finance to supply chain management. However, the security of these Smart Contracts is a critical concern and vulnerabilities in them can result in significant losses. Ethlint is a tool that can help developers identify potential security issues in their Smart Contracts and ensure that the codes are secure.
 
-## Prerequisites
+This tutorial will provide a comprehensive guide on how to secure your Celo Smart Contracts using Ethlint. We will begin by discussing the pre-requisites for using Ethlint, explore Ethlint and its importance in Smart Contract security. We will then move on to installing and configuring Ethlint, integrating it with Hardhat, writing secure Smart Contracts with Ethlint and deploying on Celo.
 
-Before you begin, you should have a basic understanding of smart contracts and programming languages such as JavaScript and Solidity. You should also have experience with the development tools used for Celo smart contract development, including Hardhat.
+## Requirements:
 
-## Understanding Ethlint and its Importance in Smart Contract Security
+1. Understanding of [Smart Contracts](https://docs.celo.org/community/release-process/smart-contracts).
+2. Understanding of JavaScript & Solidity.
+3. Experience of Celo Smart Contract development.
+4. Install [Celo Extension Wallet](https://chrome.google.com/webstore/detail/celoextensionwallet/kkilomkmpmkbdnfelcpgckmpcaemjcdh?hl=en). 
+5. Install [Remix IDE](https://remix.ethereum.org/#lang=en&optimize=false&runs=200&evmVersion=null&version=soljson-v0.8.18+commit.87f61d96.js).
+6. Install [Hardhat](https://hardhat.org/).
+7. Install [Node.js](https://nodejs.org/en/download) and [NPM](https://www.npmjs.com/package/download).
 
-Ethlint is a linter for Solidity code that analyzes smart contracts and identifies potential security vulnerabilities. It is an open-source tool that is widely used in the Ethereum ecosystem and is a valuable tool for smart contract developers.
+## Understanding Ethlint and it's Importance in Smart Contract Security:
 
-The importance of Ethlint in smart contract security cannot be overstated. Security vulnerabilities in smart contracts can result in significant losses for users and developers. Ethlint helps identify potential security issues in smart contracts, making it an essential tool for smart contract developers.
+Ethlint is a linter for Solidity code that analyzes Smart Contracts and identifies potential security vulnerabilities. It is an open-source tool that is widely used in the Ethereum ecosystem & a valuable tool for Smart Contract developers.
 
-## What is Celo?
+The importance of Ethlint in Smart Contract security cannot be overstated. Security vulnerabilities in Smart Contracts can result in significant losses for users and developers. Ethlint helps to identify potential security issues in Smart Contracts, making it an essential tool for Smart Contract developers.
 
-Celo is a blockchain platform that aims to create a more accessible and inclusive financial system by providing a platform for building decentralized applications (dApps) and smart contracts. Celo aims to reduce the barriers to entry for people who may not have access to traditional financial services, such as bank accounts and credit cards, by allowing them to transact using their mobile phones.
+## What is Celo?:
 
-One of the key features of the Celo platform is its focus on mobile-first design, which allows users to easily interact with dApps and smart contracts using their smartphones. Celo also supports stablecoins, which are cryptocurrencies that are pegged to the value of a specific asset, such as the US dollar, to provide stability and predictability in their value.
+Celo is a blockchain platform that aims to create a more accessible and inclusive financial system by providing a platform for building decentralized applications (dApps) and Smart Contracts. Celo aims to reduce the barriers to entry for people who may not have access to traditional financial services like bank accounts and credit cards thus, allowing them to transact using their mobile phones.
 
-The Celo platform uses a proof-of-stake consensus mechanism, which allows token holders to participate in the governance of the network and earn rewards for staking their tokens. The Celo native token is called CELO, and it is used for paying transaction fees, staking, and participating in the governance of the network.
+One of the key features of the Celo platform is its focus on mobile-first design which allows users to easily interact with dApps and Smart Contracts using their smartphones. Celo also supports stablecoins which are cryptocurrencies that are pegged to the value of a specific asset like the US dollar in order to provide stability and predictability in their value.
 
-## Installing and Configuring Ethlint
+The Celo platform uses a Proof-of-Stake (PoS) consensus mechanism which allows token holders to participate in the governance of the network and earn rewards for staking their tokens. The Celo native token is called CELO and it is used for paying transaction fees, staking and participating in the governance of the network.
+
+## Installing and Configuring Ethlint:
 
 Before you can use Ethlint, you need to install and configure it. Ethlint can be installed using npm, the Node.js package manager.
 
@@ -47,11 +54,11 @@ Open a terminal and type the following command to install Ethlint:
     npm install -g ethlint
 ```
 
-This will install Ethlint globally on your system. Once Ethlint is installed, you can run it on your smart contracts to identify potential security issues.
+This will install Ethlint on your system. Once Ethlint is installed, you can run it on your Smart Contracts to identify potential security issues.
 
-## Integrating Ethlint with Hardhat
+## Integrating Ethlint with Hardhat:
 
-Integrating Ethlint with Hardhat is a straightforward process. Hardhat is a development environment for Ethereum that provides a testing framework, a task runner, and other tools that make smart contract development easier. Hardhat also supports Ethlint out of the box.
+Hardhat is a development environment for Ethereum that provides a testing framework, task runner and other tools that make Smart Contract development easier. 
 
 To integrate Ethlint with Hardhat, we need to install the following packages:
 
@@ -59,7 +66,7 @@ To integrate Ethlint with Hardhat, we need to install the following packages:
     npm install --save-dev hardhat-ethlint ethlint
 ```
 
-Once the packages are installed, you need to modify the Hardhat configuration file to include Ethlint. To do this, open the `hardhat.config.js` file and add the following lines of code:
+Once the packages are installed, you need to modify the Hardhat configuration file to include Ethlint. To do this, open the `hardhat.config.js` file and add the following code:
 
 ```javascript
 module.exports = {
@@ -76,24 +83,31 @@ module.exports = {
   // ...
 };
 ```
-This configures Hardhat to enable Ethlint and run it on your smart contracts during the compilation process.
+This configures Hardhat to enable Ethlint and run it on your Smart Contracts during the compilation process.
 
-## Writing Secure Smart Contracts with Ethlint
+## Writing a Secure Smart Contracts with Ethlint:
 
-Now that you have Ethlint installed and integrated with Hardhat, you can begin writing secure smart contracts.
+Now that you have Ethlint installed and integrated with Hardhat, you can begin writing secure Smart Contracts.
 
-The following are some best practices to keep in mind when writing smart contracts:
+The following are some best practices which you need to keep in mind while writing Smart Contracts:
 
-1. Use the latest version of Solidity: The latest version of Solidity includes important security improvements, so it is important to keep your contracts up to date.
-2. Use SafeMath: SafeMath is a library that provides secure arithmetic operations in Solidity. It prevents integer overflow and underflow, which can result in unexpected behavior or even security vulnerabilities. Always use SafeMath when performing arithmetic operations in your smart contracts.
-3. Avoid using tx.origin: The tx.origin variable can be manipulated by attackers to perform unauthorized actions. It is recommended to use msg.sender instead.
-4. Avoid using block.timestamp: The block.timestamp variable can be manipulated by miners to set the timestamp of a block. It is recommended to use block.number or blockhash instead.
-5. Avoid using uninitialized storage: Uninitialized storage can contain sensitive information, so it is important to initialize all storage variables properly.
-6. Avoid using deprecated Solidity functions: Deprecated functions may have security vulnerabilities or unexpected behavior, so it is important to use up-to-date functions.
-7. Use modifiers to enforce access control: Modifiers can be used to restrict access to certain functions or variables. Always use modifiers to enforce access control in your smart contracts.
-8. Use events to log important actions: Events can be used to log important actions in your smart contracts. This can help with debugging and auditing.
+1. **Use the latest version of Solidity:** The latest version of Solidity includes important security improvements, so it is important to keep your contracts updated.
 
-Now let's look at an example of a smart contract that uses Ethlint to identify potential security issues. We will write a simple contract that stores a list of users and their balances.
+2. **Use SafeMath:** It is a library that provides secure arithmetic operations in Solidity. It prevents integer overflow and underflow which can result in unexpected behavior or even security vulnerabilities. Always use SafeMath when performing arithmetic operations in your Smart Contracts.
+
+3. **Avoid using `tx.origin`:** The `tx.origin` variable can be manipulated by attackers to perform unauthorized actions. It is recommended to use `msg.sender` instead.
+
+4. **Avoid using `block.timestamp`:** The `block.timestamp` variable can be manipulated by miners to set the timestamp of a block. It is recommended to use `block.number` or `blockhash` instead.
+
+5. **Avoid using uninitialized storage:** Uninitialized storage can contain sensitive information, so it is important to initialize all storage variables properly.
+
+6. **Avoid using deprecated Solidity functions:** Deprecated functions may have security vulnerabilities or unexpected behavior, so it is important to use updated functions.
+
+7. **Use modifiers to enforce access control:** Modifiers can be used to restrict access to certain functions or variables. Always use modifiers to enforce access control in your Smart Contracts.
+
+8. **Use events to log important actions:** Events can be used to log important actions in your Smart Contracts. This can help with debugging and auditing.
+
+Now let's look at an example of a Smart Contract that uses Ethlint to identify potential security issues. We will write a simple contract that stores a list of users and their balances:
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -118,7 +132,8 @@ contract UserBalances {
 }
 
 ```
-Let's go through the code line by line;
+Let's go through the code line by line:
+
 ```bash
   contract UserBalances
 ```
@@ -182,7 +197,7 @@ Here is an example of the output from Ethlint:
   24:17   warning  use of transfer                                             avoid-low-level-calls
 ```
 
-Ethlint has identified several potential security issues in our contract. The first warning is about the use of tx.origin, which we can fix by using msg.sender instead. The second warning is about uninitialized storage, which we can fix by initializing the balances mapping. The third warning is about unchecked arithmetic operations, which we have already fixed by using SafeMath. The fourth warning is about the use of the transfer function, which we can fix by using the withdraw pattern instead.
+Ethlint has identified several potential security issues in our contract. The first warning is about the use of `tx.origin` which we can fix by using `msg.sender` instead. The second warning is about `uninitialized` storage, which we can fix by initializing the balances mapping. The third warning is about unchecked arithmetic operations which we have already fixed by using SafeMath. The fourth warning is about the use of the `transfer` function which we can fix by using the `withdraw` pattern instead.
 
 ```javascript
 // SPDX-License-Identifier: MIT
@@ -226,14 +241,12 @@ You have fixed the potential security issues identified by Ethlint:
   2. You have initialized the `balances` mapping in the contract constructor.
   3. You have used `SafeMath` to perform arithmetic operations.
   4. You have replaced the `transfer` function with the `withdraw` pattern.
-  5. You have added deposit and withdraw events to log important actions.
+  5. You have added `deposit` and `withdraw` events to log important actions.
 With these fixes, our contract is now more secure and less vulnerable to attacks. 
 
-With these fixes, your contract is now more secure and less vulnerable to attacks.
+## Writing Tests for the Contract:
 
-## Writing Tests for the Contract
-
-Here's an example of how to write a test for the UserBalances contract using JavaScript, Hardhat, and Chai:
+Here's an example of how to write a test for the `UserBalances` contract using JavaScript, Hardhat and Chai:
 
 ```javascript
 const { expect } = require("chai");
@@ -296,11 +309,11 @@ describe("UserBalances", function () {
 });
 ```
 
-This test suite uses the Chai assertion library and the `ethers` library provided by Hardhat to interact with the `UserBalances` contract. The `beforeEach` hook deploys a new instance of the contract and sets up `owner` and `addr1` as signers for testing. The first test case checks that the deposit and withdraw functions work as expected, while the second test case checks that the `Deposit` and `Withdraw` events are emitted correctly.
+This test suite uses the Chai assertion library and the `ethers` library provided by Hardhat to interact with the `UserBalances` contract. The `beforeEach` hook deploys a new instance of the contract and sets up `owner` and `addr1` as signers for testing. The first test case checks that the deposit and withdraw functions work as expected while the second test case checks that the `Deposit` and `Withdraw` events are emitted correctly.
 
-## Deploying on the Celo network
+## Deploying on the Celo network:
 
-To deploy the smart contract on the Celo network, you will use the Hardhat framework. Here are the steps to follow:
+To deploy the Smart Contract on the Celo network, you will use the Hardhat framework. Here are the steps to follow:
 
 1. Install Hardhat:
 
@@ -313,7 +326,7 @@ To deploy the smart contract on the Celo network, you will use the Hardhat frame
     npm install --save-dev @celo/hardhat-plugin
 ```
 
-1. Configure Hardhat to use the Celo plugin. Add this code in your `hardhat.config.js` file in the root of your project:
+3. Configure Hardhat to use the Celo plugin. Add this code in your "hardhat.config.js" file in the root of your project:
 
 ```javascript
 require("@nomiclabs/hardhat-waffle");
@@ -337,7 +350,7 @@ module.exports = {
 
 Replace `<your private key>` with the private key of the account you want to use to deploy the contract.
 
-4. Create a JavaScript file deploy.js in the root of your project with the following contents:
+4. Create a JavaScript file "deploy.js" in the root of your project with the following contents:
 
 ```javascript
 const hre = require("hardhat");
@@ -370,19 +383,18 @@ This command will deploy the contract to the Alfajores testnet.
 
 Once the contract is deployed, you can verify it on the Celo Explorer by following these steps:
 
-- Go to the **[Celo explorer](https://explorer.celo.org/)**
-- In the top right corner, select the network you deployed the contract on (Alfajores or Mainnet)
-- In the left sidebar, click on "Contracts"
-- In the search bar, type the name of your contract (UserBalances)
+- Go to the **[Celo explorer](https://explorer.celo.org/)**.
+- In the top right corner, select the network you deployed the contract on (Alfajores or Mainnet).
+- In the left sidebar, click on "Contracts".
+- In the search bar, type the name of your contract (UserBalances).
 - Click on the contract name to view its details and make sure that the source code matches your local code.
 
+Congratulations!! You have successfully deployed and verified your Smart Contract on the Celo network!
 
-Congratulations, you have successfully deployed and verified your smart contract on the Celo network!
+## Conclusion:
 
-## Conclusion
+Therefore, in this tutorial you have learnt how to use Ethlint to identify potential security issues in your Celo Smart Contracts. You have also covered the basics of Ethlint including installation, usage, looked at some common security vulnerabilities and how to avoid them.
 
-In this tutorial, you have learnt how to use Ethlint to identify potential security issues in our Celo smart contracts. You have covered the basics of Ethlint, including installation and usage, and you have looked at some common security vulnerabilities and how to avoid them.
+You have also seen an example of a Smart Contract that uses Ethlint to identify potential security issues. Furthermore, you have fixed the issues identified by Ethlint and made your contract more secure.
 
-You have also seen an example of a smart contract that uses Ethlint to identify potential security issues. You have fixed the issues identified by Ethlint and made our contract more secure.
-
-Remember, security is of utmost importance in blockchain development. Always be diligent and careful when writing smart contracts, and use tools like Ethlint to identify potential security issues.
+**Always Remember** that security is of utmost importance in blockchain development. Always be diligent and careful while writing Smart Contracts and use tools like Ethlint to identify potential security issues.
