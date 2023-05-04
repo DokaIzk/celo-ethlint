@@ -220,8 +220,8 @@ Here is an example of the output from Ethlint:
 
 Ethlint has identified several potential security issues in our contract. The first warning is about the use of tx.origin, which we can fix by using msg.sender instead. The second warning is about uninitialized storage, which we can fix by initializing the balances mapping. The third warning is about unchecked arithmetic operations, which we have already fixed by using SafeMath. The fourth warning is about the use of the transfer function, which we can fix by using the withdraw pattern instead.
 
-```javascript
-// SPDX-License-Identifier: MIT
+```solidity
+ // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -239,6 +239,7 @@ contract UserBalances {
     event Withdraw(address indexed user, uint256 amount);
     
     function deposit() public payable {
+        require(msg.value > 0, "Invalid deposit amount");
         balances[msg.sender] = balances[msg.sender].add(msg.value);
         emit Deposit(msg.sender, msg.value);
     }
@@ -254,6 +255,7 @@ contract UserBalances {
         return balances[user];
     }
 }
+
 ```
 
 You have fixed the potential security issues identified by Ethlint:
