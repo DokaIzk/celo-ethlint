@@ -5,8 +5,8 @@
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Prerequisites](#prerequisites)
-  - [Understanding Ethlint and its Importance in Smart Contract Security](#understanding-ethlint-and-its-importance-in-smart-contract-security)
   - [What is Celo?](#what-is-celo)
+  - [Understanding Ethlint and its Importance in Smart Contract Security](#understanding-ethlint-and-its-importance-in-smart-contract-security)
   - [Installing and Configuring Ethlint](#installing-and-configuring-ethlint)
   - [Integrating Ethlint with Hardhat](#integrating-ethlint-with-hardhat)
   - [Writing Secure Smart Contracts with Ethlint](#writing-secure-smart-contracts-with-ethlint)
@@ -23,12 +23,6 @@ This tutorial will provide a comprehensive guide on how to secure your Celo smar
 
 Before you begin, you should have a basic understanding of smart contracts and programming languages such as JavaScript and Solidity. You should also have experience with the development tools used for Celo smart contract development, including Hardhat.
 
-## Understanding Ethlint and its Importance in Smart Contract Security
-
-Ethlint is a linter for Solidity code that analyzes smart contracts and identifies potential security vulnerabilities. It is an open-source tool that is widely used in the Ethereum ecosystem and is a valuable tool for smart contract developers.
-
-The importance of Ethlint in smart contract security cannot be overstated. Security vulnerabilities in smart contracts can result in significant losses for users and developers. Ethlint helps identify potential security issues in smart contracts, making it an essential tool for smart contract developers.
-
 ## What is Celo?
 
 Celo is a blockchain platform that aims to create a more accessible and inclusive financial system by providing a platform for building decentralized applications (dApps) and smart contracts. Celo aims to reduce the barriers to entry for people who may not have access to traditional financial services, such as bank accounts and credit cards, by allowing them to transact using their mobile phones.
@@ -36,6 +30,12 @@ Celo is a blockchain platform that aims to create a more accessible and inclusiv
 One of the key features of the Celo platform is its focus on mobile-first design, which allows users to easily interact with dApps and smart contracts using their smartphones. Celo also supports stablecoins, which are cryptocurrencies that are pegged to the value of a specific asset, such as the US dollar, to provide stability and predictability in their value.
 
 The Celo platform uses a proof-of-stake consensus mechanism, which allows token holders to participate in the governance of the network and earn rewards for staking their tokens. The Celo native token is called CELO, and it is used for paying transaction fees, staking, and participating in the governance of the network.
+
+## Understanding Ethlint and its Importance in Smart Contract Security
+
+Ethlint is a linter for Solidity code that analyzes smart contracts and identifies potential security vulnerabilities. It is an open-source tool that is widely used in the Ethereum ecosystem and is a valuable tool for smart contract developers.
+
+The importance of Ethlint in smart contract security cannot be overstated. Security vulnerabilities in smart contracts can result in significant losses for users and developers. Ethlint helps identify potential security issues in smart contracts, making it an essential tool for smart contract developers.
 
 ## Installing and Configuring Ethlint
 
@@ -182,7 +182,11 @@ Here is an example of the output from Ethlint:
   24:17   warning  use of transfer                                             avoid-low-level-calls
 ```
 
-Ethlint has identified several potential security issues in our contract. The first warning is about the use of tx.origin, which we can fix by using msg.sender instead. The second warning is about uninitialized storage, which we can fix by initializing the balances mapping. The third warning is about unchecked arithmetic operations, which we have already fixed by using SafeMath. The fourth warning is about the use of the transfer function, which we can fix by using the withdraw pattern instead.
+Ethlint has identified several potential security issues in our contract. 
+- The first warning is about the use of tx.origin, which we can fix by using msg.sender instead. 
+- The second warning is about uninitialized storage, which we can fix by initializing the balances mapping. 
+- The third warning is about unchecked arithmetic operations, which we have already fixed by using SafeMath. 
+- The fourth warning is about the use of the transfer function, which we can fix by using the withdraw pattern instead.
 
 ```javascript
 // SPDX-License-Identifier: MIT
@@ -228,8 +232,6 @@ You have fixed the potential security issues identified by Ethlint:
   4. You have replaced the `transfer` function with the `withdraw` pattern.
   5. You have added deposit and withdraw events to log important actions.
 With these fixes, our contract is now more secure and less vulnerable to attacks. 
-
-With these fixes, your contract is now more secure and less vulnerable to attacks.
 
 ## Writing Tests for the Contract
 
@@ -383,6 +385,6 @@ Congratulations, you have successfully deployed and verified your smart contract
 
 In this tutorial, you have learnt how to use Ethlint to identify potential security issues in our Celo smart contracts. You have covered the basics of Ethlint, including installation and usage, and you have looked at some common security vulnerabilities and how to avoid them.
 
-You have also seen an example of a smart contract that uses Ethlint to identify potential security issues. You have fixed the issues identified by Ethlint and made our contract more secure.
+You have also seen an example of a smart contract that uses Ethlint to identify potential security issues and fixed the issues identified by Ethlint, making our contract more secure.
 
 Remember, security is of utmost importance in blockchain development. Always be diligent and careful when writing smart contracts, and use tools like Ethlint to identify potential security issues.
