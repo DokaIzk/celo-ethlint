@@ -7,7 +7,7 @@
   - [Prerequisites](#prerequisites)
   - [Understanding Ethlint and Its Importance in Smart Contract Security](#understanding-ethlint-and-its-importance-in-smart-contract-security)
   - [What Is Celo?](#what-is-celo)
-  - [Installing and Configuring Ethlint](#installing-and-configuring-ethlint)
+  - [Installing Ethlint](#installing-ethlint)
   - [Integrating Ethlint With Hardhat](#integrating-ethlint-with-hardhat)
   - [Writing Secure Smart Contracts With Ethlint](#writing-secure-smart-contracts-with-ethlint)
   - [Writing Tests for the Contract](#writing-tests-for-the-contract)
@@ -37,7 +37,7 @@ One of the key features of the Celo platform is its focus on mobile-first design
 
 The Celo platform uses a proof-of-stake consensus mechanism, which allows token holders to participate in the governance of the network and earn rewards for staking their tokens. The Celo native token is called CELO, and it is used for paying transaction fees, staking, and participating in the governance of the network.
 
-## Installing and Configuring Ethlint
+## Installing Ethlint
 
 Before you can use Ethlint, you need to install and configure it. Ethlint can be installed using npm, the Node.js package manager.
 
@@ -56,27 +56,44 @@ Integrating Ethlint with Hardhat is a straightforward process. Hardhat is a deve
 To integrate Ethlint with Hardhat, we need to install the following packages:
 
 ```bash
-    npm install --save-dev hardhat-ethlint ethlint
+    npm install --save-dev hardhat @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle ethereum-waffle chai
 ```
 
-Once the packages are installed, you need to modify the Hardhat configuration file to include Ethlint. To do this, open the `hardhat.config.js` file and add the following lines of code:
+Next, initialize a new Hardhat JavaScript Project using the following command:
+
+```bash
+    npx hardhat init
+```
+
+Once the project is initialized, Copy and paste the following code into the `hardhat.config.js` file:
 
 ```javascript
+require("@nomiclabs/hardhat-waffle");
+
+const PRIVATE_KEY = "";
+
 module.exports = {
-  // ...
-  solidity: {
-    // ...
-    settings: {
-      // ...
-      "ethlint": {
-        "enabled": true
-      }
-    }
-  },
-  // ...
+	solidity: {
+		version: "0.8.0",
+	},
+
+	networks: {
+		hardhat: {},
+		alfajores: {
+			url: "https://alfajores-forno.celo-testnet.org",
+			chainId: 44787,
+			accounts: [PRIVATE_KEY],
+		},
+	},
 };
 ```
-This configures Hardhat to enable Ethlint and run it on your smart contracts during the compilation process.
+>**_Note_**: If you don't know how to retrieve your private key, here's a [guide](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key) that explains the steps.
+
+Finally, you need to initialize the Ethlint to be able to use it in the project. You can do so by using the following command:
+
+```bash
+ solium --init
+```
 
 ## Writing Secure Smart Contracts With Ethlint
 
@@ -85,13 +102,11 @@ Now that you have Ethlint installed and integrated with Hardhat, you can begin w
 The following are some best practices to keep in mind when writing smart contracts:
 
 1. Use the latest version of Solidity: The latest version of Solidity includes important security improvements, so it is important to keep your contracts up to date.
-2. Use SafeMath: SafeMath is a library that provides secure arithmetic operations in Solidity. It prevents integer overflow and underflow, which can result in unexpected behavior or even security vulnerabilities. Always use SafeMath when performing arithmetic operations in your smart contracts.
-3. Avoid using `tx.origin`: The `tx.origin` variable can be manipulated by attackers to perform unauthorized actions. It is recommended to use `msg.sender` instead.
-4. Avoid using `block.timestamp`: The `block.timestamp` variable can be manipulated by miners to set the timestamp of a block. It is recommended to use `block.number` or `blockhash` instead.
-5. Avoid using uninitialized storage: Uninitialized storage can contain sensitive information, so it is important to initialize all storage variables properly.
-6. Avoid using deprecated Solidity functions: Deprecated functions may have security vulnerabilities or unexpected behavior, so it is important to use up-to-date functions.
-7. Use modifiers to enforce access control: Modifiers can be used to restrict access to certain functions or variables. Always use modifiers to enforce access control in your smart contracts.
-8. Use events to log important actions: Events can be used to log important actions in your smart contracts. This can help with debugging and auditing.
+2. Avoid using `tx.origin`: The `tx.origin` variable can be manipulated by attackers to perform unauthorized actions. It is recommended to use `msg.sender` instead.
+3. Avoid using uninitialized storage: Uninitialized storage can contain sensitive information, so it is important to initialize all storage variables properly.
+4. Avoid using deprecated Solidity functions: Deprecated functions may have security vulnerabilities or unexpected behavior, so it is important to use up-to-date functions.
+5. Use modifiers to enforce access control: Modifiers can be used to restrict access to certain functions or variables. Always use modifiers to enforce access control in your smart contracts.
+6. Use events to log important actions: Events can be used to log important actions in your smart contracts. This can help with debugging and auditing.
 
 Now let's look at an example of a smart contract that uses Ethlint to identify potential security issues. We will write a simple contract that stores a list of users and their balances:
 
@@ -109,7 +124,7 @@ contract UserBalances {
     function withdraw(uint256 amount) public {
         require(balances[tx.origin] >= amount, "Insufficient balance");
         balances[tx.origin] -= amount;
-        tx.origin.send(amount);
+        payable(tx.origin).send(amount);
     }
     
     function getBalance(address user) public view returns (uint256) {
@@ -143,7 +158,7 @@ Let's go through the code line by line;
     function withdraw(uint256 amount) public {
         require(balances[tx.origin] >= amount, "Insufficient balance");
         balances[tx.origin] -= amount;
-        tx.origin.send(amount);
+        payable(tx.origin).send(amount);
     }
 ```
 - Defines a function called `withdraw` that is marked as `public`.
@@ -166,7 +181,7 @@ There are potential security vulnerabilities that Ethlint can help us identify i
 To run Ethlint on this contract, you can use the following command:
 
 ```bash
-    npx hardhat compile
+    solium -f contracts/UserBalances.sol
 ```
 
 This will compile the contract and run Ethlint on it. Ethlint will identify potential security issues and provide suggestions for how to fix them.
@@ -174,45 +189,45 @@ This will compile the contract and run Ethlint on it. Ethlint will identify pote
 Here is an example of the output from Ethlint:
 
 ```bash
-    contracts/UserBalances.sol
-  15:22  warning  usage of tx.origin                                            avoid-tx-origin
-  19:9    warning  uninitialized variable 'balances[msg.sender]' used in math operation  uninitialized-state
-  19:9    warning  unchecked uint256 addition                                  unchecked-math
-  24:17   warning  use of transfer                                             avoid-low-level-calls
+contracts/UserBalances.sol
+  6:4      warning    Line contains trailing whitespace                       no-trailing-whitespace
+  8:17     error      Consider using 'msg.sender' in place of 'tx.origin'.    security/no-tx-origin
+  10:4     warning    Line contains trailing whitespace                       no-trailing-whitespace
+  12:25    error      Consider using 'msg.sender' in place of 'tx.origin'.    security/no-tx-origin
+  13:17    error      Consider using 'msg.sender' in place of 'tx.origin'.    security/no-tx-origin
+  14:8     warning    Consider using 'transfer' in place of 'send'.           security/no-send
+  14:16    error      Consider using 'msg.sender' in place of 'tx.origin'.    security/no-tx-origin
+  16:4     warning    Line contains trailing whitespace                       no-trailing-whitespace
+
+✖ 4 errors, 4 warnings found.
 ```
 
-Ethlint has identified several potential security issues in our contract:
-1. The first warning is about the use of tx.origin, which we can fix by using msg.sender instead.
-2. The second warning is about uninitialized storage, which we can fix by initializing the `balances` mapping.
-3. The third warning is about unchecked arithmetic operations, which we have already fixed by using SafeMath.
-4. The fourth warning is about the use of the transfer function, which we can fix by using the withdraw pattern instead.
+Ethlint has identified two potential security issues in our contract:
+1. The first warning is about the use of `tx.origin`, which we can fix by using `msg.sender` instead.
+2. The second warning is about the use of the `send` function, which we can fix by using the `transfer` function instead.
+
+
+We will now fix these issues by updating our smart contract's code:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-
 contract UserBalances {
-    using SafeMath for uint256;
     
     mapping(address => uint256) private balances;
-    
-    constructor() {
-        balances[msg.sender] = 0; // Initialize sender's balance to 0
-    }
     
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
     
     function deposit() public payable {
-        balances[msg.sender] = balances[msg.sender].add(msg.value);
+        balances[msg.sender] = balances[msg.sender] + msg.value;
         emit Deposit(msg.sender, msg.value);
     }
     
     function withdraw(uint256 amount) public {
         require(balances[msg.sender] >= amount, "Insufficient balance");
-        balances[msg.sender] = balances[msg.sender].sub(amount);
+        balances[msg.sender] = balances[msg.sender] - amount;
         emit Withdraw(msg.sender, amount);
         payable(msg.sender).transfer(amount);
     }
@@ -226,10 +241,14 @@ contract UserBalances {
 You have fixed the potential security issues identified by Ethlint:
 
   1. You have replaced `tx.origin` with `msg.sender` in the `deposit` and `withdraw` functions.
-  2. You have initialized the `balances` mapping in the contract constructor.
-  3. You have used `SafeMath` to perform arithmetic operations.
-  4. You have replaced the `transfer` function with the `withdraw` pattern.
-  5. You have added deposit and withdraw events to log important actions.
+  2. You have replaced the `send` function with the `transfer` pattern.
+  3. You have added deposit and withdraw events to log important actions.
+
+Use the following command once again to ensure that the issues have been fixed:
+
+```bash
+solium -f contracts/UserBalances.sol
+```
 
 
 With these fixes, your contract is now more secure and less vulnerable to attacks.
@@ -258,16 +277,17 @@ describe("UserBalances", function () {
   });
 
   it("should deposit and withdraw funds", async function () {
+    expect(await userBalances.getBalance(addr1.address)).to.equal(0);
     // Deposit 100 wei from address 1
     await userBalances.connect(addr1).deposit({ value: 100 });
     expect(await userBalances.getBalance(addr1.address)).to.equal(100);
 
     // Withdraw 50 wei from address 1
-    await expect(userBalances.connect(addr1).withdraw(50)).to.be.fulfilled;
+    await userBalances.connect(addr1).withdraw(50);
     expect(await userBalances.getBalance(addr1.address)).to.equal(50);
 
     // Attempt to withdraw more than the balance, should fail
-    await expect(userBalances.connect(addr1).withdraw(100)).to.be.rejectedWith(
+    await expect(userBalances.connect(addr1).withdraw(100)).to.be.revertedWith(
       "Insufficient balance"
     );
     expect(await userBalances.getBalance(addr1.address)).to.equal(50);
@@ -278,69 +298,25 @@ describe("UserBalances", function () {
     const depositTx = await userBalances.deposit({ value: 100 });
     await depositTx.wait();
 
-    // Expect Deposit event to be emitted
-    const depositEvent = depositTx.events.find(
-      (event) => event.event === "Deposit"
-    );
-    expect(depositEvent.args.user).to.equal(owner.address);
-    expect(depositEvent.args.amount).to.equal(100);
-
     // Withdraw 50 wei from owner
-    const withdrawTx = await userBalances.withdraw(50);
-    await withdrawTx.wait();
-
-    // Expect Withdraw event to be emitted
-    const withdrawEvent = withdrawTx.events.find(
-      (event) => event.event === "Withdraw"
-    );
-    expect(withdrawEvent.args.user).to.equal(owner.address);
-    expect(withdrawEvent.args.amount).to.equal(50);
+    expect(await userBalances.withdraw(50)).to.emit(userBalances, "Deposit")
+    .withArgs(owner.address, 100);
   });
 });
 ```
 
 This test suite uses the Chai assertion library and the `ethers` library provided by Hardhat to interact with the `UserBalances` contract. The `beforeEach` hook deploys a new instance of the contract and sets up `owner` and `addr1` as signers for testing. The first test case checks that the deposit and withdraw functions work as expected, while the second test case checks that the `Deposit` and `Withdraw` events are emitted correctly.
 
+
+You can run this script by using the following command:
+
+```bash
+npx hardhat test
+```
+
 ## Deploying on the Celo Alfajores Network
 
-To deploy the smart contract on the Celo network, you will use the Hardhat framework. Here are the steps to follow:
-
-1. Install Hardhat:
-
-```bash
-    npm install --save-dev hardhat
-```
-2. Install the Celo plugin for Hardhat:
-
-```bash
-    npm install --save-dev @celo/hardhat-plugin
-```
-
-1. Configure Hardhat to use the Celo plugin. Add this code in your `hardhat.config.js` file in the root of your project:
-
-```javascript
-require("@nomiclabs/hardhat-waffle");
-require("@celo/hardhat-plugin");
-
-const PRIVATE_KEY = "<your private key>";
-
-module.exports = {
-  solidity: "0.8.0",
-  networks: {
-    hardhat: {},
-    alfajores: {
-      url: "https://alfajores-forno.celo-testnet.org",
-      chainId: 44787,
-      gasPrice: 1000000000,
-      accounts: [PRIVATE_KEY],
-    },
-  },
-};
-```
-
-Replace `<your private key>` with the private key of the account you want to use to deploy the contract.
-
-4. Create a JavaScript file deploy.js in the root of your project with the following contents:
+1. Create a JavaScript file deploy.js in the root of your project with the following contents:
 
 ```javascript
 const hre = require("hardhat");
@@ -362,25 +338,23 @@ main()
 
 This file uses Hardhat to deploy the `UserBalances` contract to the Celo network. When you run this script, it will compile the contract and deploy it to the specified network.
 
-5. Run the deploy.js script:
+2. Run the deploy.js script:
 
 ```bash
-    npx hardhat run deploy.js --network alfajores
+    npx hardhat run scripts/deploy.js --network alfajores
 ```
 This command will deploy the contract to the Alfajores testnet.
 
-6. Verify the deployed contract on the Celo Explorer:
+3. View the deployed contract on the Celo Explorer:
 
-Once the contract is deployed, you can verify it on the Celo Explorer by following these steps:
+Once the contract is deployed, you can view it on the Celo Explorer by following these steps:
 
-- Go to the **[Celo explorer](https://explorer.celo.org/)**
-- In the top right corner, select the network you deployed the contract on (Alfajores or Mainnet)
-- In the left sidebar, click on "Contracts"
-- In the search bar, type the name of your contract (UserBalances)
-- Click on the contract name to view its details and make sure that the source code matches your local code.
+- Go to the **[Celo Alfajores explorer](https://explorer.celo.org/alfajores)**
+- In the search bar, enter the address of your contract that was previously logged to the console
+- Click on the contract that appears to view its details
 
 
-Congratulations, you have successfully deployed and verified your smart contract on the Celo network!
+Congratulations, you have successfully deployed your smart contract on the Celo network!
 
 ## Conclusion
 
