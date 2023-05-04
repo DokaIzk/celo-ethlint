@@ -98,24 +98,34 @@ Now let's look at an example of a smart contract that uses Ethlint to identify p
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract UserBalances {
     mapping(address => uint256) private balances;
+    IERC20 private celoToken;
+    using SafeERC20 for IERC20;
     
-    function deposit() public payable {
-        balances[tx.origin] += msg.value;
+    constructor(address _celoTokenAddress) {
+        celoToken = IERC20(_celoTokenAddress);
+    }
+    
+    function deposit(uint256 amount) public {
+        celoToken.safeTransferFrom(msg.sender, address(this), amount);
+        balances[msg.sender] += amount;
     }
     
     function withdraw(uint256 amount) public {
-        require(balances[tx.origin] >= amount, "Insufficient balance");
-        balances[tx.origin] -= amount;
-        tx.origin.send(amount);
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+        balances[msg.sender] -= amount;
+        celoToken.safeTransfer(msg.sender, amount);
     }
     
     function getBalance(address user) public view returns (uint256) {
         return balances[user];
     }
 }
+
 
 ```
 Let's go through the code line by line;
