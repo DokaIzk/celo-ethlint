@@ -106,7 +106,7 @@ contract UserBalances is ReentrancyGuard {
 
     mapping(address => uint128) private balances;
 
-    uint128 private constant MAX_DEPOSIT = 100 ether;
+    uint128 private constant MAX_DEPOSIT = 100;
 
     
 
